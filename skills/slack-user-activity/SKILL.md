@@ -94,6 +94,9 @@ slack user-activity okayama --days 30 --count 100 --out .claude/tmp/slack/okayam
 `query` には実際に Slack に投げた検索クエリが入る（再現性のため）。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `user-activity requires --token-type user` | Bot Token を指定した | `--token-type user` に切替 |

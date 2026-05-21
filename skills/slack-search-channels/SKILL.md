@@ -36,7 +36,9 @@ slack search-channels [flags]
 |---|---|---|---|
 | `--types` | string | public_channel | comma-separated: public_channel,private_channel,mpim,im |
 | `--limit` | int | 200 | 1 リクエスト件数 (max 999) |
-| `--cursor` | string | "" | 次ページの cursor |
+| `--max-pages` | int | 1 | next_cursor を **自動で walk** して最大 N ページまで取得。`--query` がローカル filter なので大規模 ws ではこれを上げる |
+| `--all` | bool | false | next_cursor が空になるまで全ページ walk（`--max-pages` は無視される） |
+| `--cursor` | string | "" | 再開用の開始 cursor |
 | `--exclude-archived` | bool | true | archived を除外 |
 | `--include-archived` | bool | false | archived を含める（exclude を上書き） |
 | `--query` | string | "" | チャンネル名で substring 絞り込み (case-insensitive, ローカル適用) |
@@ -44,13 +46,16 @@ slack search-channels [flags]
 
 ### 典型例
 ```bash
-# public チャンネル一覧
+# public チャンネル一覧（1 ページのみ）
 slack search-channels --limit 500
 
-# private 含めて name に "incident" を含むもの
-slack search-channels --types public_channel,private_channel --query incident
+# substring が遠くにあるとき: 多めに walk
+slack search-channels --query incident --max-pages 10
 
-# 次ページ
+# 「全部欲しい」（中〜大規模 ws では --out 推奨）
+slack search-channels --types public_channel,private_channel --all --out /tmp/all-channels.json
+
+# 中断したセッションを再開
 slack search-channels --cursor dXNlcjpV...
 ```
 
@@ -72,13 +77,18 @@ slack search-channels --cursor dXNlcjpV...
     }
   ],
   "next_cursor": "dXNlcjpV...",
-  "query": "incident"
+  "query": "incident",
+  "pages_fetched": 3
 }
 ```
 
-`next_cursor` が空文字なら終端。
+- `next_cursor` が空文字なら終端。
+- `pages_fetched` で実際に何ページ取ったかが分かる。`--max-pages` で打ち切られた場合は値が `--max-pages` と同じになり、`next_cursor` も空ではない。続きを取るには `--cursor <next_cursor>` で resume するか、`--max-pages` を上げるか、`--all` で完走する。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `missing_scope` | `--types` に対応する read scope が無い | App 設定で `*:read` を追加 |
@@ -87,5 +97,5 @@ slack search-channels --cursor dXNlcjpV...
 
 ## 注意
 - `--exclude-archived` の filter は **取得後** に適用されるため、1 ページの返却数が `--limit` より少なくなる可能性あり。
-- `--query` は取得後の **ローカル filter**。サーバー検索ではないので、1 ページ内に絞り込み結果が出るとは限らない。広い `--limit` で取って絞ると確実。
+- `--query` は取得後の **ローカル filter**。サーバー検索ではないので、最初の N ページに絞り込み結果が出るとは限らない。**ヒット 0 件のとき真っ先に疑うべきは `--max-pages` 不足**。`--max-pages 50` か `--all` で広めに取り直す。
 - `--types` を public_channel 以外指定する場合、対応 scope (`groups:read` 等) が必須。

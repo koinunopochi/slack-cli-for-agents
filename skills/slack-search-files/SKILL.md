@@ -93,6 +93,9 @@ slack search-files "filetype:pdf 議事録 after:2026-01-01"
 `next_page` が `null` なら終端。最大 100 ページで打ち止め。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `search-files requires --token-type user` | Bot Token を指定した | `--token-type user` に切替 |

@@ -81,6 +81,9 @@ slack search-users --cursor 'dXNlcjpV...' --max-pages 5
 空でなければ次は `--cursor <next_cursor>` で続きを取れる。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `missing_scope` | `users:read` が App に付いていない | App 設定で `users:read` 追加。email なら `users:read.email` も |

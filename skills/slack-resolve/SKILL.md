@@ -79,6 +79,9 @@ slack resolve "<url>" --out .claude/tmp/slack/thread.json
 `ts` はパスから復元した値（permalink そのものが指すメッセージ）。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `not a Slack message permalink` | URL が `/archives/<CH>/p<TS>` の形式に合っていない | permalink を確認 |

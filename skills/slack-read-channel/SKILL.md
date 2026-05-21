@@ -67,6 +67,9 @@ slack read-channel C0123456 --oldest 1700000000.000000 --latest 1700086400.00000
 `next_cursor` が空文字なら終端。`has_more` も冗長な判定材料。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `channel_not_found` | チャンネル ID が誤り | ID を確認 |

@@ -71,6 +71,9 @@ slack read-thread C0123456 1700000000.123456 --exclude-parent
 `next_cursor` が空文字なら終端。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `thread_not_found` | thread_ts に対応する親が無い、または subtype がスレッド不可（channel_join 等） | thread_ts を確認 |

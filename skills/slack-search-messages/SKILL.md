@@ -77,6 +77,9 @@ slack search-messages "deployment failed" --count 100 --page 2
 それ以上欲しい場合はクエリを時間で分割する（`before:` / `after:`）。
 
 ## エラー
+
+> **scope エラー診断**: `missing_scope` の場合、CLI はコマンドが期待する scope (`needed:`) と token が実際に持っている scope (`provided:`、レスポンス HTTP ヘッダから取得) を併記する。ギャップをそのまま diff できるので、追加すべき scope が即わかる。
+
 | err | 意味 | 対処 |
 |---|---|---|
 | `missing_scope` | `search:read` が App に付いていない | App 設定で User Token Scope に `search:read` 追加 |
