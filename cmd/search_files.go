@@ -10,6 +10,7 @@ import (
 
 	"github.com/koinunopochi/slack-cli/internal/client"
 	"github.com/koinunopochi/slack-cli/internal/config"
+	"github.com/koinunopochi/slack-cli/internal/errs"
 	"github.com/koinunopochi/slack-cli/internal/output"
 )
 
@@ -84,7 +85,7 @@ func runSearchFiles(c *cobra.Command, args []string) error {
 
 	resp, err := cl.SearchFilesContext(ctx, args[0], params)
 	if err != nil {
-		return err
+		return errs.Enrich(err, []string{"search:read", "files:read"})
 	}
 
 	var nextPage any

@@ -10,6 +10,7 @@ import (
 
 	"github.com/koinunopochi/slack-cli/internal/client"
 	"github.com/koinunopochi/slack-cli/internal/config"
+	"github.com/koinunopochi/slack-cli/internal/errs"
 	"github.com/koinunopochi/slack-cli/internal/output"
 )
 
@@ -85,7 +86,7 @@ func runSearchUsers(c *cobra.Command, args []string) error {
 			break
 		}
 		if e := p.Failure(loopErr); e != nil {
-			return e
+			return errs.Enrich(e, []string{"users:read"})
 		}
 		all = append(all, p.Users...)
 		pages++
@@ -94,7 +95,7 @@ func runSearchUsers(c *cobra.Command, args []string) error {
 		}
 	}
 	if e := p.Failure(loopErr); e != nil {
-		return e
+		return errs.Enrich(e, []string{"users:read"})
 	}
 
 	if !searchUsersIncludeDeleted {
