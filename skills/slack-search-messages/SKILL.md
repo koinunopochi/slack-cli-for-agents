@@ -56,6 +56,11 @@ slack search-messages "in:#alerts before:2024-12-01" --sort timestamp --sort-dir
 slack search-messages "deployment failed" --count 100 --page 2
 ```
 
+## 共通フラグ
+- `--out <path>` 結果を `<path>` に書き出し、stdout は `{out, format, size_bytes}` のサマリーだけ。ヒット件数が読めないので、検索系では特に推奨。
+- `--include-permalinks` `search.messages` の各 match は既に `permalink` を含むので **no-op**。
+- ほか `--format json|pretty` / `--token-type user|bot` (user 固定) / `--timeout` / `--debug` は全コマンド共通。
+
 ## 出力（JSON）
 ```json
 {

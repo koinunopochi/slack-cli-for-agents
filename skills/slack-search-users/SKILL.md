@@ -53,6 +53,11 @@ slack search-users --include-deleted
 slack search-users --cursor 'dXNlcjpV...' --max-pages 5
 ```
 
+## 共通フラグ
+- `--out <path>` 結果を `<path>` に書き出し、stdout は `{out, format, size_bytes}` のサマリーだけ。大規模 workspace で `--max-pages` を増やす時は必ず使うこと。
+- `--include-permalinks` ユーザーリストを返すコマンドなので **no-op**。
+- ほか `--format json|pretty` / `--token-type user|bot` / `--timeout` / `--debug` は全コマンド共通。
+
 ## 出力（JSON）
 ```json
 {

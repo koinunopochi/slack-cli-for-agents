@@ -52,6 +52,11 @@ slack read-thread C0123456 1700000000.123456
 slack read-thread C0123456 1700000000.123456 --exclude-parent
 ```
 
+## 共通フラグ
+- `--out <path>` 結果を `<path>` に書き出し、stdout は `{out, format, size_bytes}` のサマリーだけ。スレッドが長いときは必ずこれを使うこと。
+- `--include-permalinks` 各メッセージに permalink を埋め込む（`chat.getPermalink` を 1 件ずつ呼ぶ）。**有効**。後段で「この発言を引用したい」が出るときの足場になる。
+- ほか `--format json|pretty` / `--token-type user|bot` / `--timeout` / `--debug` は全コマンド共通。
+
 ## 出力（JSON）
 ```json
 {

@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/slack-go/slack"
@@ -97,5 +96,5 @@ func runSearchMessages(c *cobra.Command, args []string) error {
 		"page_count": resp.Paging.Pages,
 		"next_page":  nextPage,
 	}
-	return output.Print(os.Stdout, out, fmtt)
+	return output.Emit(out, fmtt, FlagOut)
 }
