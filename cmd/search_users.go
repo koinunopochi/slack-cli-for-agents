@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"os"
 	"strings"
 	"time"
 
@@ -131,5 +130,5 @@ func runSearchUsers(c *cobra.Command, args []string) error {
 		"page_count":  pages,
 		"query":       searchUsersQuery,
 	}
-	return output.Print(os.Stdout, res, fmtt)
+	return output.Emit(res, fmtt, FlagOut)
 }

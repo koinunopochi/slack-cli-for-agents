@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"os"
 	"time"
 
 	"github.com/slack-go/slack"
@@ -11,6 +10,7 @@ import (
 	"github.com/koinunopochi/slack-cli/internal/client"
 	"github.com/koinunopochi/slack-cli/internal/config"
 	"github.com/koinunopochi/slack-cli/internal/output"
+	"github.com/koinunopochi/slack-cli/internal/permalink"
 )
 
 var (
@@ -79,6 +79,12 @@ func runReadChannel(c *cobra.Command, args []string) error {
 		return err
 	}
 
+	if FlagIncludePermalinks {
+		if err := permalink.EnrichMessages(ctx, cl, args[0], resp.Messages); err != nil {
+			return err
+		}
+	}
+
 	out := map[string]any{
 		"channel":     args[0],
 		"messages":    resp.Messages,
@@ -86,5 +92,5 @@ func runReadChannel(c *cobra.Command, args []string) error {
 		"next_cursor": resp.ResponseMetaData.NextCursor,
 		"pin_count":   resp.PinCount,
 	}
-	return output.Print(os.Stdout, out, fmtt)
+	return output.Emit(out, fmtt, FlagOut)
 }

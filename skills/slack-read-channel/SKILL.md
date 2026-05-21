@@ -49,6 +49,11 @@ slack read-channel C0123456 --cursor dXNlcjpV...
 slack read-channel C0123456 --oldest 1700000000.000000 --latest 1700086400.000000
 ```
 
+## 共通フラグ
+- `--out <path>` 結果を `<path>` に書き出し、stdout は `{out, format, size_bytes}` のサマリーだけ。件数が多いときはこれを使ってエージェントの context を圧迫しないこと。
+- `--include-permalinks` 各メッセージに permalink を埋め込む（`chat.getPermalink` を 1 件ずつ呼ぶ）。**有効**。レスポンス後に追加 API コールが走る。
+- ほか `--format json|pretty` / `--token-type user|bot` / `--timeout` / `--debug` は全コマンド共通。`slack --help` 参照。
+
 ## 出力（JSON）
 ```json
 {

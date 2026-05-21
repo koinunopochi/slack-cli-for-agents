@@ -38,13 +38,16 @@ Required OAuth scopes per command are documented in each `skills/<name>/SKILL.md
 
 ## Commands
 
-| Command           | Token        | Purpose                                  |
-|-------------------|--------------|------------------------------------------|
-| `read-channel`    | user / bot   | Fetch recent messages in a channel       |
-| `read-thread`     | user / bot   | Fetch all replies in a thread            |
-| `search-messages` | **user**     | Search messages by Slack query           |
-| `search-channels` | user / bot   | List / filter channels                   |
-| `search-users`    | user / bot   | List / filter users                      |
+| Command           | Token        | Purpose                                                      |
+|-------------------|--------------|--------------------------------------------------------------|
+| `read-channel`    | user / bot   | Fetch recent messages in a channel                           |
+| `read-thread`     | user / bot   | Fetch all replies in a thread                                |
+| `resolve`         | user / bot   | Resolve a Slack permalink and fetch the enclosing thread     |
+| `search-messages` | **user**     | Search messages by Slack query                               |
+| `search-files`    | **user**     | Search files (PDF / image / snippet) by Slack query          |
+| `search-channels` | user / bot   | List / filter channels                                       |
+| `search-users`    | user / bot   | List / filter users                                          |
+| `user-activity`   | **user**     | Resolve a user (name → ID) and list their recent messages    |
 
 Each command emits JSON containing both the result and `next_cursor` (or `next_page`) so an AI agent can paginate explicitly.
 
@@ -52,7 +55,20 @@ Each command emits JSON containing both the result and `next_cursor` (or `next_p
 ./bin/slack --help
 ./bin/slack read-channel C0123456 --limit 50
 ./bin/slack search-messages "from:@me incident"
+./bin/slack resolve "https://example.slack.com/archives/C012/p1700000000123456"
+./bin/slack user-activity okayama --days 7
 ```
+
+### Common flags (any command)
+
+| Flag                    | Effect                                                                                                        |
+|-------------------------|---------------------------------------------------------------------------------------------------------------|
+| `--out <path>`          | Write the payload to `<path>` instead of stdout; stdout receives a small JSON summary (`{out, format, size_bytes}`). Parent dirs are created automatically. Use this to keep large payloads out of the agent's context window. |
+| `--include-permalinks`  | Populate `permalink` on each message via `chat.getPermalink`. Costs one extra API call per message. `search-messages` already returns permalinks so this is a no-op there. |
+| `--format json\|pretty` | Output format. `json` is single-line for piping; `pretty` indents.                                            |
+| `--token-type user\|bot`| Which token to use. `search-messages`, `search-files`, and `user-activity` require `user`.                    |
+| `--timeout <duration>`  | HTTP timeout per call. Default 30s.                                                                           |
+| `--debug`               | Enable slack-go debug logging to stderr.                                                                      |
 
 ## Skills (for AI agents)
 
@@ -63,9 +79,12 @@ Each command ships with a Claude-Code-compatible skill at `skills/<name>/SKILL.m
 ~/playground-okayama/.claude/skills/
   ├── slack-read-channel    → ~/slack-cli/skills/slack-read-channel
   ├── slack-read-thread     → ~/slack-cli/skills/slack-read-thread
+  ├── slack-resolve         → ~/slack-cli/skills/slack-resolve
   ├── slack-search-messages → ~/slack-cli/skills/slack-search-messages
+  ├── slack-search-files    → ~/slack-cli/skills/slack-search-files
   ├── slack-search-channels → ~/slack-cli/skills/slack-search-channels
-  └── slack-search-users    → ~/slack-cli/skills/slack-search-users
+  ├── slack-search-users    → ~/slack-cli/skills/slack-search-users
+  └── slack-user-activity   → ~/slack-cli/skills/slack-user-activity
 ~/playground-okayama/tools/slack/cli → ~/slack-cli   (local convenience; gitignored)
 ```
 
@@ -78,13 +97,17 @@ Each command ships with a Claude-Code-compatible skill at `skills/<name>/SKILL.m
 │   ├── root.go
 │   ├── read_channel.go
 │   ├── read_thread.go
-│   ├── search_messages.go
+│   ├── resolve.go
 │   ├── search_channels.go
-│   └── search_users.go
+│   ├── search_files.go
+│   ├── search_messages.go
+│   ├── search_users.go
+│   └── user_activity.go
 ├── internal/
 │   ├── client/          # slack-go/slack thin wrapper (retry + timeout)
 │   ├── config/          # env-based token loader
-│   └── output/          # JSON / pretty formatter
+│   ├── output/          # JSON / pretty formatter, --out file writer
+│   └── permalink/       # chat.getPermalink enrichment for messages
 ├── skills/
 │   └── slack-*/SKILL.md
 ├── Makefile

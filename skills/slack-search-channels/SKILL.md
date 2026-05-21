@@ -54,6 +54,11 @@ slack search-channels --types public_channel,private_channel --query incident
 slack search-channels --cursor dXNlcjpV...
 ```
 
+## 共通フラグ
+- `--out <path>` 結果を `<path>` に書き出し、stdout は `{out, format, size_bytes}` のサマリーだけ。
+- `--include-permalinks` メッセージを返さないコマンドなので **no-op**。
+- ほか `--format json|pretty` / `--token-type user|bot` / `--timeout` / `--debug` は全コマンド共通。
+
 ## 出力（JSON）
 ```json
 {

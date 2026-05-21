@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"os"
 	"strings"
 	"time"
 
@@ -99,7 +98,7 @@ func runSearchChannels(c *cobra.Command, args []string) error {
 		"next_cursor": nextCursor,
 		"query":       searchChannelsQuery,
 	}
-	return output.Print(os.Stdout, out, fmtt)
+	return output.Emit(out, fmtt, FlagOut)
 }
 
 func splitCSV(s string) []string {
