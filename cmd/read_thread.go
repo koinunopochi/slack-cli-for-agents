@@ -9,6 +9,7 @@ import (
 
 	"github.com/koinunopochi/slack-cli/internal/client"
 	"github.com/koinunopochi/slack-cli/internal/config"
+	"github.com/koinunopochi/slack-cli/internal/errs"
 	"github.com/koinunopochi/slack-cli/internal/output"
 	"github.com/koinunopochi/slack-cli/internal/permalink"
 )
@@ -78,7 +79,9 @@ func runReadThread(c *cobra.Command, args []string) error {
 	}
 	messages, hasMore, nextCursor, err := cl.GetConversationRepliesContext(ctx, params)
 	if err != nil {
-		return err
+		return errs.Enrich(err, []string{
+			"channels:history", "groups:history", "im:history", "mpim:history",
+		})
 	}
 
 	if readThreadExcludeParent && len(messages) > 0 && messages[0].Timestamp == args[1] {

@@ -15,6 +15,11 @@ description: >
 - GitHub PR の author を Slack で同定して、直近の動きから背景を拾いたい
 - User ID が分かっているなら直接渡してもよい
 
+> **強く推奨**: 可能なら **Slack user ID (`U08L3MPJB9T` のような `U`/`W` 始まりの ID) を直接渡す**。
+> 名前解決は `users.list` を最大 `--max-user-pages` 回スキャンする実装なので、大規模 workspace では
+> ヒットするまで時間がかかる or デフォルト 30 ページ（= 6,000 ユーザー）で届かないことがある。
+> ID が分からないときはまず `slack search-users --query <name> --max-pages 50` で当たりを付けると速い。
+
 ## 前提
 - `slack` バイナリにパスが通っている
 - `SLACK_USER_TOKEN` (xoxp-) が env に設定済み（`SLACK_BOT_TOKEN` 不可）

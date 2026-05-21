@@ -32,9 +32,46 @@ The CLI reads tokens from environment variables:
 
 Use `--token-type user` (default) or `--token-type bot` to select.
 
-Required OAuth scopes per command are documented in each `skills/<name>/SKILL.md`.
+> **Note**: `search.messages` / `search.files` / `user-activity` are **User Token only** (legacy `search:read`).
 
-> **Note**: `search.messages` is **User Token only** (legacy `search:read`).
+### Recommended OAuth scopes (paste these into your Slack App)
+
+To use **every** command in this CLI, add the following scopes to your Slack
+App's OAuth & Permissions page and reinstall the app to your workspace.
+
+**User Token Scopes** (`SLACK_USER_TOKEN`, recommended primary token):
+
+```
+channels:history   groups:history   im:history   mpim:history
+channels:read      groups:read      im:read      mpim:read
+files:read         search:read      users:read
+```
+
+**Bot Token Scopes** (`SLACK_BOT_TOKEN`, optional — Bot Tokens cannot call
+`search.messages` / `search.files` / `user-activity`):
+
+```
+channels:history   groups:history   im:history   mpim:history
+channels:read      groups:read      im:read      mpim:read
+users:read
+```
+
+### Per-command scope matrix
+
+| Command           | Token        | Scopes Slack will check                                                |
+|-------------------|--------------|------------------------------------------------------------------------|
+| `read-channel`    | user / bot   | `channels:history` / `groups:history` / `im:history` / `mpim:history`  |
+| `read-thread`     | user / bot   | same as `read-channel`                                                 |
+| `resolve`         | user / bot   | same as `read-channel`                                                 |
+| `search-channels` | user / bot   | `channels:read` / `groups:read` / `im:read` / `mpim:read` (per `--types`) |
+| `search-users`    | user / bot   | `users:read`                                                            |
+| `search-messages` | **user**     | `search:read`                                                          |
+| `search-files`    | **user**     | `search:read`, `files:read`                                            |
+| `user-activity`   | **user**     | `users:read`, `search:read`                                            |
+
+When a call fails with `missing_scope`, the CLI prints which scopes the command
+expects and which scopes the token actually has (from the `x-oauth-scopes`
+header captured on the most recent response), so the gap is easy to spot.
 
 ## Commands
 

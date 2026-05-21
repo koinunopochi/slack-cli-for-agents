@@ -11,6 +11,7 @@ import (
 
 	"github.com/koinunopochi/slack-cli/internal/client"
 	"github.com/koinunopochi/slack-cli/internal/config"
+	"github.com/koinunopochi/slack-cli/internal/errs"
 	"github.com/koinunopochi/slack-cli/internal/output"
 )
 
@@ -47,7 +48,10 @@ func init() {
 	userActivityCmd.Flags().StringVar(&userActivityIn, "in", "", "restrict to a single channel (added to query as in:#<name>)")
 	userActivityCmd.Flags().StringVar(&userActivitySort, "sort", "timestamp", `"score" or "timestamp"`)
 	userActivityCmd.Flags().StringVar(&userActivitySortDirection, "sort-direction", "desc", `"asc" or "desc"`)
-	userActivityCmd.Flags().IntVar(&userActivityMaxUserPages, "max-user-pages", 10, "max pages to scan when resolving the user (users.list)")
+	userActivityCmd.Flags().IntVar(&userActivityMaxUserPages, "max-user-pages", 30,
+		"max pages to scan when resolving the user (users.list, 200 users/page). "+
+			"Mid-to-large workspaces often need 20+ to surface a given name; "+
+			"prefer passing a Slack user ID (Uxxxx) to skip resolution entirely.")
 	RootCmd.AddCommand(userActivityCmd)
 }
 
@@ -98,7 +102,7 @@ func runUserActivity(c *cobra.Command, args []string) error {
 
 	resp, err := cl.SearchMessagesContext(ctx, query, params)
 	if err != nil {
-		return err
+		return errs.Enrich(err, []string{"search:read", "users:read"})
 	}
 
 	var nextPage any
@@ -133,7 +137,7 @@ func resolveUser(ctx context.Context, cl *slack.Client, input string, maxPages i
 	if looksLikeUserID(input) {
 		u, err := cl.GetUserInfoContext(ctx, input)
 		if err != nil {
-			return nil, fmt.Errorf("users.info(%s): %w", input, err)
+			return nil, errs.Enrich(fmt.Errorf("users.info(%s): %w", input, err), []string{"users:read"})
 		}
 		return u, nil
 	}
@@ -154,7 +158,7 @@ func resolveUser(ctx context.Context, cl *slack.Client, input string, maxPages i
 			break
 		}
 		if e := p.Failure(loopErr); e != nil {
-			return nil, e
+			return nil, errs.Enrich(e, []string{"users:read"})
 		}
 		for _, u := range p.Users {
 			if u.Deleted {
@@ -189,7 +193,13 @@ func resolveUser(ctx context.Context, cl *slack.Client, input string, maxPages i
 	case len(candidates) > 1:
 		return nil, ambiguousUserError(input, candidates)
 	}
-	return nil, fmt.Errorf("no user matched %q (scanned %d page(s); raise --max-user-pages if your workspace is large)", input, pages)
+	return nil, fmt.Errorf(
+		"no user matched %q (scanned %d page(s) of %d users each).\n"+
+			"  hints:\n"+
+			"  - large workspaces: raise --max-user-pages (default 30, allow up to total_users/200)\n"+
+			"  - exact ID known: pass the Slack user ID directly, e.g. `slack user-activity U08L3MPJB9T`\n"+
+			"  - try `slack search-users --query %q --max-pages 50` to see how the name is spelled",
+		input, pages, 200, input)
 }
 
 // looksLikeUserID returns true if s is plausibly a Slack user ID
@@ -214,7 +224,10 @@ func ambiguousUserError(input string, us []slack.User) error {
 	for _, u := range us {
 		names = append(names, fmt.Sprintf("%s (%s, %s)", u.Name, u.ID, u.RealName))
 	}
-	return fmt.Errorf("ambiguous user %q — %d candidates: %s", input, len(us), strings.Join(names, ", "))
+	return fmt.Errorf(
+		"ambiguous user %q — %d candidates: %s\n"+
+			"  hint: pass the Slack user ID (the Uxxxx part) directly to disambiguate, e.g. `slack user-activity %s`",
+		input, len(us), strings.Join(names, ", "), us[0].ID)
 }
 
 // normalizeIn turns "channel-name" into "#channel-name"; "#channel-name" and
