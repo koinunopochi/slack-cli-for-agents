@@ -19,7 +19,7 @@ description: >
 - ユーザの Slack UI 上の検索フィルタ（例: 参加チャンネルのみ）が API 応答にも適用される。
 
 ## 前提
-- `play-slack` バイナリにパスが通っている
+- `slack` バイナリにパスが通っている
 - `SLACK_USER_TOKEN` が env に設定済み
 
 ## 必要 OAuth スコープ
@@ -27,7 +27,7 @@ description: >
 
 ## 使い方
 ```bash
-play-slack search-messages "<query>" [flags]
+slack search-messages "<query>" [flags]
 ```
 
 主要フラグ:
@@ -51,9 +51,9 @@ play-slack search-messages "<query>" [flags]
 
 ### 典型例
 ```bash
-play-slack search-messages "incident from:@me"
-play-slack search-messages "in:#alerts before:2024-12-01" --sort timestamp --sort-direction desc
-play-slack search-messages "deployment failed" --count 100 --page 2
+slack search-messages "incident from:@me"
+slack search-messages "in:#alerts before:2024-12-01" --sort timestamp --sort-direction desc
+slack search-messages "deployment failed" --count 100 --page 2
 ```
 
 ## 出力（JSON）

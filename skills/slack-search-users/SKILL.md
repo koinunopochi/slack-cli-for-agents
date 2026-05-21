@@ -13,7 +13,7 @@ description: >
 - 削除済ユーザも含めたい
 
 ## 前提
-- `play-slack` バイナリにパスが通っている
+- `slack` バイナリにパスが通っている
 - `SLACK_USER_TOKEN` または `SLACK_BOT_TOKEN` が env に設定済み
 
 ## 必要 OAuth スコープ
@@ -22,7 +22,7 @@ description: >
 
 ## 使い方
 ```bash
-play-slack search-users [flags]
+slack search-users [flags]
 ```
 
 主要フラグ:
@@ -38,19 +38,19 @@ play-slack search-users [flags]
 ### 典型例
 ```bash
 # 200 人だけ取得
-play-slack search-users
+slack search-users
 
 # 名前で絞り込み
-play-slack search-users --query okayama
+slack search-users --query okayama
 
 # 全ユーザを 10 ページまで取得
-play-slack search-users --max-pages 10 --query .
+slack search-users --max-pages 10 --query .
 
 # 削除済も含む
-play-slack search-users --include-deleted
+slack search-users --include-deleted
 
 # 続きを取得（前回出力の next_cursor を渡す）
-play-slack search-users --cursor 'dXNlcjpV...' --max-pages 5
+slack search-users --cursor 'dXNlcjpV...' --max-pages 5
 ```
 
 ## 出力（JSON）

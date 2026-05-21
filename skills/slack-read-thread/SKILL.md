@@ -13,7 +13,7 @@ description: >
 - 親メッセージを除いて返信だけほしい（`--exclude-parent`）
 
 ## 前提
-- `play-slack` バイナリにパスが通っている
+- `slack` バイナリにパスが通っている
 - `SLACK_USER_TOKEN` または `SLACK_BOT_TOKEN` が env に設定済み
 
 ## 必要 OAuth スコープ
@@ -26,7 +26,7 @@ description: >
 
 ## 使い方
 ```bash
-play-slack read-thread <channel-id> <thread-ts> [flags]
+slack read-thread <channel-id> <thread-ts> [flags]
 ```
 
 主要フラグ:
@@ -43,13 +43,13 @@ play-slack read-thread <channel-id> <thread-ts> [flags]
 ### 典型例
 ```bash
 # まず read-channel で thread_ts を見つける
-play-slack read-channel C0123456 --limit 100 | jq '.messages[] | select(.thread_ts) | .ts'
+slack read-channel C0123456 --limit 100 | jq '.messages[] | select(.thread_ts) | .ts'
 
 # その ts を渡してスレッド取得
-play-slack read-thread C0123456 1700000000.123456
+slack read-thread C0123456 1700000000.123456
 
 # 親なしで返信だけ
-play-slack read-thread C0123456 1700000000.123456 --exclude-parent
+slack read-thread C0123456 1700000000.123456 --exclude-parent
 ```
 
 ## 出力（JSON）

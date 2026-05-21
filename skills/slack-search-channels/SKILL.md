@@ -13,7 +13,7 @@ description: >
 - private / DM / MPIM も含めて一覧したい
 
 ## 前提
-- `play-slack` バイナリにパスが通っている
+- `slack` バイナリにパスが通っている
 - `SLACK_USER_TOKEN` または `SLACK_BOT_TOKEN` が env に設定済み
 
 ## 必要 OAuth スコープ
@@ -28,7 +28,7 @@ description: >
 
 ## 使い方
 ```bash
-play-slack search-channels [flags]
+slack search-channels [flags]
 ```
 
 主要フラグ:
@@ -45,13 +45,13 @@ play-slack search-channels [flags]
 ### 典型例
 ```bash
 # public チャンネル一覧
-play-slack search-channels --limit 500
+slack search-channels --limit 500
 
 # private 含めて name に "incident" を含むもの
-play-slack search-channels --types public_channel,private_channel --query incident
+slack search-channels --types public_channel,private_channel --query incident
 
 # 次ページ
-play-slack search-channels --cursor dXNlcjpV...
+slack search-channels --cursor dXNlcjpV...
 ```
 
 ## 出力（JSON）

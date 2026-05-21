@@ -16,9 +16,9 @@ Slack Web API CLI for AI agents — written in Go, supply-chain conscious.
 ## Build
 
 ```bash
-make build               # → bin/play-slack
+make build               # → bin/slack
 # or
-go build -o bin/play-slack ./...
+go build -o bin/slack ./...
 ```
 
 ## Tokens
@@ -49,9 +49,9 @@ Required OAuth scopes per command are documented in each `skills/<name>/SKILL.md
 Each command emits JSON containing both the result and `next_cursor` (or `next_page`) so an AI agent can paginate explicitly.
 
 ```bash
-./bin/play-slack --help
-./bin/play-slack read-channel C0123456 --limit 50
-./bin/play-slack search-messages "from:@me incident"
+./bin/slack --help
+./bin/slack read-channel C0123456 --limit 50
+./bin/slack search-messages "from:@me incident"
 ```
 
 ## Skills (for AI agents)

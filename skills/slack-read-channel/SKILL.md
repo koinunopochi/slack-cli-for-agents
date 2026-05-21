@@ -13,7 +13,7 @@ description: >
 - スレッドが張られているか確認したい（thread_ts が含まれる）
 
 ## 前提
-- `play-slack` バイナリにパスが通っている（または `~/slack-cli/bin/play-slack`）
+- `slack` バイナリにパスが通っている（または `~/slack-cli/bin/slack`）
 - `SLACK_USER_TOKEN` または `SLACK_BOT_TOKEN` が env に設定済み
 
 ## 必要 OAuth スコープ
@@ -26,7 +26,7 @@ description: >
 
 ## 使い方
 ```bash
-play-slack read-channel <channel-id> [flags]
+slack read-channel <channel-id> [flags]
 ```
 
 主要フラグ:
@@ -42,11 +42,11 @@ play-slack read-channel <channel-id> [flags]
 
 ### 典型例
 ```bash
-play-slack read-channel C0123456 --limit 50
+slack read-channel C0123456 --limit 50
 # 次ページ
-play-slack read-channel C0123456 --cursor dXNlcjpV...
+slack read-channel C0123456 --cursor dXNlcjpV...
 # 期間指定
-play-slack read-channel C0123456 --oldest 1700000000.000000 --latest 1700086400.000000
+slack read-channel C0123456 --oldest 1700000000.000000 --latest 1700086400.000000
 ```
 
 ## 出力（JSON）

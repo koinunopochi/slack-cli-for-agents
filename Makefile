@@ -1,4 +1,4 @@
-BIN := bin/play-slack
+BIN := bin/slack
 
 .PHONY: all build test lint fmt vet tidy clean install help
 

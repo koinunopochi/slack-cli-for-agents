@@ -14,9 +14,9 @@ var (
 )
 
 var RootCmd = &cobra.Command{
-	Use:   "play-slack",
+	Use:   "slack",
 	Short: "Slack Web API CLI for AI agents",
-	Long: `play-slack is a thin Slack Web API CLI tailored for AI agents.
+	Long: `slack is a thin Slack Web API CLI tailored for AI agents.
 It exposes read-only collection commands (read-channel, read-thread,
 search-messages, search-channels, search-users) and emits JSON by default
 so downstream agents can consume the output without extra parsing.`,
