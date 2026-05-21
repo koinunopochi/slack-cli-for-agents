@@ -1,0 +1,33 @@
+# Build outputs
+bin/
+dist/
+*.exe
+*.test
+*.out
+
+# Go workspace
+go.work
+go.work.sum
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local secrets (never commit raw tokens)
+.env
+.env.local
+.envrc
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Scratch / agent handoff
+.claude/tmp/
+tmp/
