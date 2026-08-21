@@ -31,6 +31,17 @@ See [docs/README.md](docs/README.md) for command selection, authentication,
 pagination, output, and safety details. Agent-oriented instructions live in
 [AGENTS.md](AGENTS.md); [CLAUDE.md](CLAUDE.md) points to the same file.
 
+## Downloads
+
+Published releases include ready-to-run archives for Linux, macOS, and Windows
+on amd64 and arm64. Download the archive for your platform from this
+repository's GitHub Releases page; you do not need Go or a local build. Each
+archive includes the `slack` binary, `LICENSE`, `NOTICE`, and this README.
+Verify downloads with `SHA256SUMS`.
+
+The release workflow runs when a `v*` tag is pushed. See
+[docs/releases.md](docs/releases.md) for the maintainer procedure.
+
 ## Commands
 
 | Command | Purpose |
@@ -71,4 +82,8 @@ make lint
 
 ## License
 
-Private / internal. Not for redistribution.
+Copyright 2026 slack-cli-for-agents authors
+
+This project is licensed under the Apache License, Version 2.0. See
+[LICENSE](LICENSE) for the full text. Third-party dependencies retain their
+respective licenses.
