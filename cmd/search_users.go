@@ -42,6 +42,7 @@ func init() {
 	searchUsersCmd.Flags().IntVar(&searchUsersMaxPages, "max-pages", 1, "stop after fetching this many pages")
 	searchUsersCmd.Flags().BoolVar(&searchUsersIncludeDeleted, "include-deleted", false, "include deleted/deactivated users")
 	searchUsersCmd.Flags().StringVar(&searchUsersTeamID, "team-id", "", "Enterprise Grid: org-level token uses this")
+	attachDocumentation(searchUsersCmd, commandDocs("search-users"))
 	RootCmd.AddCommand(searchUsersCmd)
 }
 

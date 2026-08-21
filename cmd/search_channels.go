@@ -64,6 +64,7 @@ func init() {
 			"Raise this when --query rarely matches in the first page.")
 	searchChannelsCmd.Flags().BoolVar(&searchChannelsAll, "all", false,
 		"walk every page until next_cursor is empty; ignores --max-pages")
+	attachDocumentation(searchChannelsCmd, commandDocs("search-channels"))
 	RootCmd.AddCommand(searchChannelsCmd)
 }
 

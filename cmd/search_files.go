@@ -46,6 +46,7 @@ func init() {
 	searchFilesCmd.Flags().StringVar(&searchFilesSortDirection, "sort-direction", "desc", `"asc" or "desc"`)
 	searchFilesCmd.Flags().BoolVar(&searchFilesHighlight, "highlight", false, "include highlight markers")
 	searchFilesCmd.Flags().StringVar(&searchFilesTeamID, "team-id", "", "Enterprise Grid: filter by team ID")
+	attachDocumentation(searchFilesCmd, commandDocs("search-files"))
 	RootCmd.AddCommand(searchFilesCmd)
 }
 

@@ -52,6 +52,7 @@ func init() {
 		"max pages to scan when resolving the user (users.list, 200 users/page). "+
 			"Mid-to-large workspaces often need 20+ to surface a given name; "+
 			"prefer passing a Slack user ID (Uxxxx) to skip resolution entirely.")
+	attachDocumentation(userActivityCmd, commandDocs("user-activity"))
 	RootCmd.AddCommand(userActivityCmd)
 }
 

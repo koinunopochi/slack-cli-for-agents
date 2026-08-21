@@ -42,6 +42,7 @@ func init() {
 	readChannelCmd.Flags().StringVar(&readChannelLatest, "latest", "", "Slack ts; only messages older than this")
 	readChannelCmd.Flags().BoolVar(&readChannelInclusive, "inclusive", false, "include messages exactly at --oldest / --latest")
 	readChannelCmd.Flags().BoolVar(&readChannelIncludeMetadata, "include-metadata", false, "include all message metadata")
+	attachDocumentation(readChannelCmd, commandDocs("read-channel"))
 	RootCmd.AddCommand(readChannelCmd)
 }
 

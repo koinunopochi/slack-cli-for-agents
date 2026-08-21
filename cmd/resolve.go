@@ -42,6 +42,7 @@ plus its replies if it happens to be a parent.`,
 func init() {
 	resolveCmd.Flags().IntVar(&resolveLimit, "limit", 200, "replies per request (recommended max 200)")
 	resolveCmd.Flags().BoolVar(&resolveIncludeMetadata, "include-metadata", false, "include all message metadata")
+	attachDocumentation(resolveCmd, commandDocs("resolve"))
 	RootCmd.AddCommand(resolveCmd)
 }
 

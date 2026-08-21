@@ -43,6 +43,7 @@ func init() {
 	readThreadCmd.Flags().BoolVar(&readThreadInclusive, "inclusive", false, "include messages exactly at --oldest / --latest")
 	readThreadCmd.Flags().BoolVar(&readThreadIncludeMetadata, "include-metadata", false, "include all message metadata")
 	readThreadCmd.Flags().BoolVar(&readThreadExcludeParent, "exclude-parent", false, "exclude the parent message from output")
+	attachDocumentation(readThreadCmd, commandDocs("read-thread"))
 	RootCmd.AddCommand(readThreadCmd)
 }
 

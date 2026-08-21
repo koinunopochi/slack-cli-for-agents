@@ -41,6 +41,7 @@ func init() {
 	searchMessagesCmd.Flags().StringVar(&searchMessagesSortDirection, "sort-direction", "desc", "\"asc\" or \"desc\"")
 	searchMessagesCmd.Flags().BoolVar(&searchMessagesHighlight, "highlight", false, "include highlight markers")
 	searchMessagesCmd.Flags().StringVar(&searchMessagesTeamID, "team-id", "", "filter by team ID (Enterprise Grid)")
+	attachDocumentation(searchMessagesCmd, commandDocs("search-messages"))
 	RootCmd.AddCommand(searchMessagesCmd)
 }
 

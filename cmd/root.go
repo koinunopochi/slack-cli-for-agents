@@ -6,6 +6,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	documentationURL        = "https://github.com/koinunopochi/slack-cli-for-agents/blob/main/docs/README.md"
+	commandDocumentationURL = "https://github.com/koinunopochi/slack-cli-for-agents/blob/main/docs/commands.md"
+)
+
 var (
 	FlagTokenType         string
 	FlagFormat            string
@@ -29,6 +34,7 @@ context window.`,
 }
 
 func init() {
+	attachDocumentation(RootCmd, documentationURL)
 	RootCmd.PersistentFlags().StringVarP(&FlagTokenType, "token-type", "t", "user",
 		"Slack token type: user | bot")
 	RootCmd.PersistentFlags().StringVarP(&FlagFormat, "format", "f", "json",
@@ -44,6 +50,14 @@ func init() {
 		"Populate the permalink field on each message via chat.getPermalink. "+
 			"Costs one extra API call per message; search.messages already returns permalinks "+
 			"so this is a no-op there.")
+}
+
+func attachDocumentation(command *cobra.Command, target string) {
+	command.Long += "\n\nDetailed documentation:\n  " + target
+}
+
+func commandDocs(section string) string {
+	return commandDocumentationURL + "#" + section
 }
 
 func Execute() error { return RootCmd.Execute() }
