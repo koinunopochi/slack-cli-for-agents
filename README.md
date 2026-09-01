@@ -10,12 +10,15 @@ channels, and users, but does not manage Slack apps or change Slack data.
 make build
 export SLACK_USER_TOKEN=xoxp-...
 ./bin/slack --help
+./bin/slack context
 ./bin/slack read-channel C0123456789 --limit 50
 ```
 
 Use `--token-type bot` with `SLACK_BOT_TOKEN` when a read operation is available
 to the bot. Workspace search commands (`search-messages`, `search-files`, and
-`user-activity`) require a User Token.
+`user-activity`) require a User Token. User-token commands also ensure a local
+rolling 30-day context cache; the first run builds it and later runs refresh it
+after 24 hours. Use `context --refresh` to rebuild it explicitly.
 
 ## Documentation
 
@@ -46,6 +49,7 @@ The release workflow runs when a `v*` tag is pushed. See
 
 | Command | Purpose |
 |---|---|
+| `context` | Build or read the current user's rolling activity context |
 | `read-channel` | Read recent messages from a known channel ID |
 | `read-thread` | Read a thread from a channel ID and thread timestamp |
 | `resolve` | Resolve a Slack permalink and read its enclosing thread |

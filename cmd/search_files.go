@@ -30,7 +30,8 @@ var searchFilesCmd = &cobra.Command{
 syntax as search.messages (from:, in:, after:, before:, "phrase", has:link, ...).
 
 User Token only — requires the legacy search:read scope, which Bot Tokens
-cannot obtain.
+cannot obtain. The automatic context preflight runs before this command and
+uses the same search:read scope.
 
 Examples:
   slack search-files "design from:@alice after:2026-05-01"

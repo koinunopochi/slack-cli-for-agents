@@ -24,13 +24,17 @@ var RootCmd = &cobra.Command{
 	Use:   "slack",
 	Short: "Slack Web API CLI for AI agents",
 	Long: `slack is a thin Slack Web API CLI tailored for AI agents.
-It exposes read-only collection commands (read-channel, read-thread, resolve,
-search-messages, search-files, search-channels, search-users, user-activity)
-and emits JSON by default so downstream agents can consume the output without
-extra parsing. Use --out <path> to keep large payloads out of the agent's
-context window.`,
-	SilenceUsage:  true,
-	SilenceErrors: false,
+It exposes read-only collection commands (context, read-channel, read-thread,
+resolve, search-messages, search-files, search-channels, search-users,
+user-activity) and emits JSON by default so downstream agents can consume the
+output without extra parsing. User-token commands automatically build or
+refresh a local rolling 30-day context cache once per day; use context to
+inspect it. Use --out <path> to keep large payloads out of the agent's context
+window. A partial or stale context is reported on stderr while the command
+continues with its requested Slack read.`,
+	SilenceUsage:      true,
+	SilenceErrors:     false,
+	PersistentPreRunE: ensureContextForCommand,
 }
 
 func init() {

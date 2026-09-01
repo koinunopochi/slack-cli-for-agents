@@ -34,7 +34,9 @@ Accepted formats:
 
 When thread_ts is present the entire enclosing thread is returned; otherwise
 the resolved ts is used as the thread anchor, which returns the message itself
-plus its replies if it happens to be a parent.`,
+plus its replies if it happens to be a parent.
+User Token commands also require search:read for the automatic context
+preflight; Bot Token commands skip that preflight.`,
 	Args: cobra.ExactArgs(1),
 	RunE: runResolve,
 }

@@ -30,7 +30,9 @@ var readThreadCmd = &cobra.Command{
 	Long: `Fetch the parent message and all replies for a given Slack thread.
 Wraps the conversations.replies Web API. Supports pagination via --cursor /
 --limit and time-range filtering via --oldest / --latest. Use --exclude-parent
-to drop the parent message from the output when you only want the replies.`,
+to drop the parent message from the output when you only want the replies.
+User Token commands also require search:read for the automatic context
+preflight; Bot Token commands skip that preflight.`,
 	Args: cobra.ExactArgs(2),
 	RunE: runReadThread,
 }

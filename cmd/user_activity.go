@@ -32,7 +32,8 @@ var userActivityCmd = &cobra.Command{
 display_name via users.list) and fetch their recent messages via search.messages.
 
 User Token only — search.messages requires the legacy search:read scope which
-is not available to Bot Tokens.
+is not available to Bot Tokens. The automatic context preflight runs before
+this command and uses the same search:read scope.
 
 Examples:
   slack user-activity U0123456789 --days 7

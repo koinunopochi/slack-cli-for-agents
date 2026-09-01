@@ -30,7 +30,9 @@ var searchUsersCmd = &cobra.Command{
 locally by substring against name / real_name / display_name.
 
 Large workspaces can return many pages; use --max-pages to bound the fetch
-and re-run with --cursor <next_cursor> from the previous output to paginate.`,
+and re-run with --cursor <next_cursor> from the previous output to paginate.
+User Token commands also require search:read for the automatic context
+preflight; Bot Token commands skip that preflight.`,
 	Args: cobra.NoArgs,
 	RunE: runSearchUsers,
 }

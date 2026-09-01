@@ -44,7 +44,9 @@ any matches in a large workspace. Two ways to walk further:
   --all           Walk every page until next_cursor is empty, ignoring
                   --max-pages. Use this when you want absolutely every channel.
 
-The output includes pages_fetched so callers can see how far the walk got.`,
+The output includes pages_fetched so callers can see how far the walk got.
+User Token commands also require search:read for the automatic context
+preflight; Bot Token commands skip that preflight.`,
 	Args: cobra.NoArgs,
 	RunE: runSearchChannels,
 }

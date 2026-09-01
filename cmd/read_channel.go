@@ -30,7 +30,9 @@ var readChannelCmd = &cobra.Command{
 
 Supports public/private channels, DMs, and MPIMs. Requires the matching
 *_history OAuth scope for the channel type (channels:history, groups:history,
-im:history, or mpim:history) on the chosen token (user or bot).`,
+im:history, or mpim:history) on the chosen token (user or bot).
+User Token commands also require search:read for the automatic context
+preflight; Bot Token commands skip that preflight.`,
 	Args: cobra.ExactArgs(1),
 	RunE: runReadChannel,
 }
