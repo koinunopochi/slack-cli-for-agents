@@ -19,6 +19,39 @@ also accept `--include-permalinks`; it makes an extra `chat.getPermalink` call
 per message. Search results already include permalinks, so the flag is a no-op
 there.
 
+## Context cache
+
+With a User Token, normal commands ensure a local rolling 30-day context cache
+once every 24 hours. The first check performs the bounded `search.messages`
+walk; later checks reuse the cache until it is due for refresh. The cache is
+keyed by workspace and user below the operating system's user cache directory,
+with restrictive local permissions. A full rolling rebuild replaces the old
+channel aggregates, which removes activity outside the window.
+
+`slack context` returns an envelope like this:
+
+```json
+{
+  "status": "fresh",
+  "refreshed": true,
+  "refresh_error": "",
+  "context": {
+    "workspace": {"id": "T0123456789"},
+    "user": {"id": "U0123456789"},
+    "window": {"days": 30},
+    "partial": false,
+    "channels": []
+  }
+}
+```
+
+The cache contains identifiers and activity aggregates only. It never contains
+message text or token values. `partial` indicates that the bounded search page
+walk did not cover all reported pages. If a refresh fails after a usable cache
+exists, the CLI continues with `status: "stale"` and reports a coarse failure
+category; a first-run failure is returned as an error. Normal commands also
+write stale/partial warnings to stderr so their JSON result remains usable.
+
 ## Keep large payloads out of the context
 
 `--out <path>` writes the full payload to a file and emits only a summary on

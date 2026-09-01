@@ -29,7 +29,8 @@ var searchMessagesCmd = &cobra.Command{
 	Long: `Search Slack messages across the workspace using Slack's search.messages API.
 Supports Slack query syntax (from:, in:, before:, after:, has:, "phrase"...).
 User Token only: the underlying API requires the legacy search:read scope,
-which is not available to Bot Tokens. Pass --token-type user.`,
+which is not available to Bot Tokens. Pass --token-type user. The automatic
+context preflight runs before this command and uses the same search:read scope.`,
 	Args: cobra.ExactArgs(1),
 	RunE: runSearchMessages,
 }

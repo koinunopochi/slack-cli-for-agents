@@ -5,6 +5,38 @@ page explains when to choose each command and how to continue from its output.
 
 All examples use placeholder IDs and a placeholder workspace.
 
+## context
+
+Build or read the authenticated user's derived Slack context.
+
+```sh
+slack context
+slack context --refresh
+```
+
+On the first run, the CLI searches the last 30 days of messages posted by the
+authenticated user and ranks the channels by activity. It stores only the
+workspace/user IDs, channel identifiers and names, privacy/type flags, activity
+counts, and last-activity timestamps. It does not store message bodies or
+tokens. A cache older than 24 hours is rebuilt from the full rolling 30-day
+window, so activity older than the window falls out naturally.
+
+The JSON envelope reports `status` as `fresh`, `partial`, or `stale`, whether
+the cache was `refreshed`, and a coarse `refresh_error` when an older cache had
+to be used. `partial` means Slack reported more pages than the CLI's bounded
+walk; treat the ranking as incomplete. `stale` means the previous cache was
+returned after a refresh failure. A missing cache or an authentication failure
+remains an error.
+
+Every User Token command performs the same once-per-24-hours cache check before
+its own request. Bot Token commands skip this check because a bot token does
+not identify the human user's activity. Use this command when the context
+payload itself is needed by an agent.
+
+This command requires a User Token with the legacy `search:read` scope. Slack's
+search API is bounded to the first 100 results per page and a bounded page walk;
+inspect `status` before treating the ranking as complete.
+
 ## read-channel
 
 Read recent messages from a known channel.
@@ -21,6 +53,9 @@ needed, call [`read-thread`](#read-thread). If the input is a permalink, use
 
 Required history scope depends on the channel type: `channels:history`,
 `groups:history`, `im:history`, or `mpim:history`.
+User Token commands also require `search:read` for the automatic context
+preflight. Bot Token commands use only the matching history scope and skip the
+preflight.
 
 ## read-thread
 
@@ -34,6 +69,9 @@ slack read-thread C0123456789 1710000000.000000 --exclude-parent
 The first message is the parent unless `--exclude-parent` is set. Continue with
 `--cursor` when `next_cursor` is present. A permalink should go through
 [`resolve`](#resolve), which extracts the channel and timestamp safely.
+User Token commands also require `search:read` for the automatic context
+preflight. Bot Token commands use the matching history scope and skip the
+preflight.
 
 ## resolve
 
@@ -46,7 +84,9 @@ slack resolve 'https://example.slack.com/archives/C0123456789/p1710000000000000'
 Quote the URL for shell safety. A `thread_ts` query parameter selects the
 enclosing thread; without it, the URL timestamp is used as the thread anchor.
 Use `--limit` for a large thread. Do not guess a channel from a malformed URL or
-silently replace an access error with a history search.
+silently replace an access error with a history search. User Token commands also
+require `search:read` for the automatic context preflight; Bot Token commands
+skip that preflight.
 
 ## search-channels
 
@@ -62,6 +102,9 @@ pages already fetched. Increase `--max-pages` or continue with `--cursor` when a
 large workspace has no match on the first page. Use `--all` only when a complete
 walk is actually required. Check `name`, `is_private`, and `is_archived` before
 choosing among multiple candidates.
+With a User Token, `search:read` is also required for the automatic context
+preflight. Bot Token commands use the channel-read scopes selected by `--types`
+and skip the preflight.
 
 ## search-files
 
@@ -76,7 +119,8 @@ This command requires a User Token and the legacy `search:read` scope. Use
 `from:`, `in:`, `after:`, `before:`, `has:link`, and quoted phrases to narrow the
 search. Use `--sort timestamp` for a timeline; the default score sort is better
 for discovery. Results identify files with metadata and links; do not expose a
-`url_private` value.
+`url_private` value. The same `search:read` scope is used by the automatic
+context preflight, which runs before this command.
 
 ## search-messages
 
@@ -92,7 +136,9 @@ with a narrow query. Use the default score sort for discovery and
 `--sort timestamp` for chronology. Continue with `--page` only when
 `next_page` is non-null; split by date or channel rather than treating the page
 limit as a complete export. Use a returned channel and timestamp with
-[`read-thread`](#read-thread) when the replies matter.
+[`read-thread`](#read-thread) when the replies matter. The same `search:read`
+scope is used by the automatic context preflight, which runs before this
+command.
 
 ## search-users
 
@@ -106,6 +152,8 @@ slack search-users --query 'alice' --max-pages 10
 `--max-pages` and then `--cursor` when the first page is insufficient. Compare
 the candidate ID and names before choosing; do not resolve an ambiguous name by
 guessing. Avoid exposing email addresses unless the task requires one.
+With a User Token, `search:read` is also required for the automatic context
+preflight. Bot Token commands use `users:read` and skip the preflight.
 
 ## user-activity
 
@@ -121,4 +169,5 @@ This command requires a User Token, `users:read`, and legacy `search:read`.
 Use `--max-user-pages` only as far as necessary when starting from a name. If
 there are multiple matching people, use [`search-users`](#search-users) first.
 Use `--days`, `--in`, and `--count` to keep the search bounded. Continue with
-`--page` when `next_page` is present.
+`--page` when `next_page` is present. The same `search:read` scope is used by
+the automatic context preflight, which runs before this command.

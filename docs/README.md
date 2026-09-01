@@ -16,6 +16,7 @@ skill or a copied command manual.
 
 | Input or goal | Command |
 |---|---|
+| Current user's active channels and cache freshness | [`context`](commands.md#context) |
 | A Slack message permalink | [`resolve`](commands.md#resolve) |
 | A known channel ID and recent history | [`read-channel`](commands.md#read-channel) |
 | A channel ID and thread timestamp | [`read-thread`](commands.md#read-thread) |
@@ -29,7 +30,7 @@ skill or a copied command manual.
 
 - [Commands](commands.md) — purpose, examples, important flags, and pagination.
 - [Authentication](authentication.md) — token variables, OAuth scopes, and scope errors.
-- [Output and safety](output.md) — JSON shape, `--out`, pagination, permalinks, and private data.
+- [Output and safety](output.md) — JSON shape, context cache, `--out`, pagination, permalinks, and private data.
 
 ## Operating boundary
 

@@ -10,13 +10,19 @@ The CLI reads tokens from environment variables. It never prompts for a token.
 `search-messages`, `search-files`, and `user-activity` are User Token only because
 Slack's search API requires the legacy `search:read` scope.
 
+The `context` command also requires a User Token with `search:read`. Every other
+User Token command performs the same context-cache check before its own API
+request. Bot Token commands skip that check and do not build a user activity
+cache.
+
 ## Scope matrix
 
 | Command | Required scopes |
 |---|---|
-| `read-channel`, `read-thread`, `resolve` | One matching history scope: `channels:history`, `groups:history`, `im:history`, or `mpim:history` |
-| `search-channels` | `channels:read`, `groups:read`, `im:read`, or `mpim:read`, according to `--types` |
-| `search-users` | `users:read` |
+| `context` | `search:read` (User Token) |
+| `read-channel`, `read-thread`, `resolve` | User Token: one matching history scope (`channels:history`, `groups:history`, `im:history`, or `mpim:history`) plus `search:read` for the automatic context preflight. Bot Token: the matching history scope only. |
+| `search-channels` | User Token: `channels:read`, `groups:read`, `im:read`, or `mpim:read` according to `--types`, plus `search:read` for the automatic context preflight. Bot Token: the matching channel-read scope only. |
+| `search-users` | User Token: `users:read` plus `search:read` for the automatic context preflight. Bot Token: `users:read`. |
 | `search-messages` | `search:read` (User Token) |
 | `search-files` | `search:read` and `files:read` (User Token) |
 | `user-activity` | `users:read` and `search:read` (User Token) |
